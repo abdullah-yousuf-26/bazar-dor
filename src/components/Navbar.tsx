@@ -4,7 +4,7 @@ import { useEffect, useState, useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
-import { ShoppingCart, User, LogOut, ChevronDown } from "lucide-react";
+import { User, LogOut, ChevronDown } from "lucide-react";
 import toast from "react-hot-toast";
 import { getBengaliDate } from "@/lib/bengali";
 import { useSession, signOut } from "@/lib/auth-client";
@@ -27,7 +27,7 @@ export default function Navbar({ tickerItems = [] }: { tickerItems?: TickerItem[
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
-  // Set Bengali date safely on client mount
+  // Bengali date
   useEffect(() => {
     const timer = setTimeout(() => {
       setBengaliDate(getBengaliDate(new Date()));
@@ -35,7 +35,7 @@ export default function Navbar({ tickerItems = [] }: { tickerItems?: TickerItem[
     return () => clearTimeout(timer);
   }, []);
 
-  // Close dropdown on click outside
+  // Close dropdown
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
@@ -64,23 +64,31 @@ export default function Navbar({ tickerItems = [] }: { tickerItems?: TickerItem[
 
   return (
     <header className="w-full bg-white border-b border-gray-100 shadow-[0_1px_3px_rgba(0,0,0,0.02)] sticky top-0 z-50">
-      {/* Tier 1: Logo & User Status */}
+      
+      {/* Logo & User */}
       <div className="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
-        <Link href="/" className="flex items-center gap-3 group">
-          <div className="w-10 h-10 rounded-xl bg-[#0f7a42] flex items-center justify-center text-white shadow-sm group-hover:scale-105 transition-transform duration-200">
-            <ShoppingCart className="w-5 h-5 stroke-[2.2]" />
+        <Link href="/" className="flex items-center gap-3.5 group">
+          <div className="relative w-12 h-12 rounded-[18px] bg-[#0d8246] flex items-center justify-center shrink-0 shadow-sm group-hover:scale-105 transition-transform duration-200 p-2">
+            <Image
+              src="/logo-icon.png"
+              alt="বাজার দর"
+              width={30}
+              height={30}
+              priority
+              className="object-contain"
+            />
           </div>
-          <div>
-            <span className="font-black text-xl text-gray-900 tracking-tight block leading-tight">
+          <div className="flex flex-col justify-center">
+            <span className="font-extrabold text-[22px] leading-tight text-[#1a231e] tracking-tight">
               বাজার দর
             </span>
-            <span className="text-[11px] text-gray-400 font-medium block">
+            <span className="text-[12px] text-gray-700 font-normal mt-0.5">
               {bengaliDate || "লোড হচ্ছে..."}
             </span>
           </div>
         </Link>
 
-        {/* Top-Right: Auth Status & Dropdown Menu */}
+        {/* Dropdown Menu */}
         {user ? (
           <div className="relative" ref={menuRef}>
             <button
@@ -113,10 +121,10 @@ export default function Navbar({ tickerItems = [] }: { tickerItems?: TickerItem[
               />
             </button>
 
-            {/* User Dropdown Menu Card */}
+            {/* Dropdown Card */}
             {menuOpen && (
               <div className="absolute right-0 mt-2 w-64 bg-white rounded-2xl shadow-[0_10px_30px_rgba(0,0,0,0.08)] border border-gray-100 p-4 z-50 animate-in fade-in slide-in-from-top-2 duration-150">
-                {/* User Info Header */}
+                {/* User Info */}
                 <div className="pb-3 border-b border-gray-100">
                   <p className="font-bold text-gray-900 text-sm truncate">
                     {user.name}
@@ -126,7 +134,7 @@ export default function Navbar({ tickerItems = [] }: { tickerItems?: TickerItem[
                   </p>
                 </div>
 
-                {/* Menu Items */}
+                {/* Menu */}
                 <div className="pt-2 space-y-1">
                   <Link
                     href="/profile"
@@ -167,7 +175,7 @@ export default function Navbar({ tickerItems = [] }: { tickerItems?: TickerItem[
         )}
       </div>
 
-      {/* Tier 2: Categories Navigation */}
+{/* Categories */}
       <nav className="border-t border-gray-100/80 bg-white overflow-x-auto no-scrollbar">
         <div className="max-w-6xl mx-auto px-4 flex items-center justify-center gap-2 sm:gap-4 py-2 min-w-max">
           {CATEGORIES.map((cat) => {
@@ -190,7 +198,7 @@ export default function Navbar({ tickerItems = [] }: { tickerItems?: TickerItem[
         </div>
       </nav>
 
-      {/* Tier 3: Price Marquee */}
+{/* Marquee  */}
       {tickerItems.length > 0 && (
         <div className="border-t border-gray-100 bg-[#f9faf9] overflow-hidden whitespace-nowrap py-1.5 relative">
           <div className="inline-flex gap-8 animate-marquee text-[11px] font-medium text-gray-700">

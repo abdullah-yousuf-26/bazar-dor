@@ -24,13 +24,13 @@ export default function ProductSections({ products = [], isLoading = false }: Pr
 
   const safeProducts = Array.isArray(products) ? products : [];
 
-  // Top 6 Risers (dir === "up" or pct > 0, highest pct first)
+
   const risers = safeProducts
     .filter((p) => (p.change?.pct ?? 0) > 0)
     .sort((a, b) => (b.change?.pct ?? 0) - (a.change?.pct ?? 0))
     .slice(0, 6);
 
-  // Top 6 Fallers (dir === "down" or pct < 0, greatest drops first)
+  
   const fallers = safeProducts
     .filter((p) => (p.change?.pct ?? 0) < 0)
     .sort((a, b) => (a.change?.pct ?? 0) - (b.change?.pct ?? 0))
@@ -38,7 +38,7 @@ export default function ProductSections({ products = [], isLoading = false }: Pr
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-8 space-y-12">
-      {/* 1. আজ দাম বেড়েছে */}
+      {/* Up price */}
       {risers.length > 0 && (
         <section>
           <div className="flex items-center gap-2 mb-4">
@@ -55,7 +55,7 @@ export default function ProductSections({ products = [], isLoading = false }: Pr
         </section>
       )}
 
-      {/* 2. আজ দাম কমেছে */}
+      {/*down price*/}
       {fallers.length > 0 && (
         <section>
           <div className="flex items-center gap-2 mb-4">
@@ -72,7 +72,7 @@ export default function ProductSections({ products = [], isLoading = false }: Pr
         </section>
       )}
 
-      {/* 3. সব পণ্য */}
+      {/* all products */}
       <section id="সব-পণ্য" className="scroll-mt-24">
         <div className="mb-4">
           <h2 className="text-xl font-bold text-gray-900 tracking-tight">

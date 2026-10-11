@@ -1,6 +1,10 @@
 "use client";
 
+import { useEffect } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
+import { useSession } from "@/lib/auth-client";
 import { Product, MarketItem } from "./ProductCard";
 import { toBengaliNumber } from "@/lib/bengali";
 
@@ -9,26 +13,52 @@ interface Props {
 }
 
 export default function ProductDetailsView({ product }: Props) {
+  const router = useRouter();
+  const { data: session, isPending } = useSession();
+
+  useEffect(() => {
+    if (!isPending && !session?.user) {
+      toast.error("বিস্তারিত দেখতে অনুগ্রহ করে আগে সাইন ইন করুন");
+      router.replace("/signin");
+    }
+  }, [session, isPending, router]);
+
+  // Loading 
+  if (isPending) {
+    return (
+      <main className="max-w-6xl mx-auto px-4 py-8 space-y-6 animate-pulse">
+        <div className="h-5 w-40 bg-gray-200 rounded-lg" />
+        <div className="h-40 bg-white rounded-3xl border border-gray-100" />
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="h-28 bg-white rounded-2xl border border-gray-100" />
+          <div className="h-28 bg-white rounded-2xl border border-gray-100" />
+          <div className="h-28 bg-white rounded-2xl border border-gray-100" />
+        </div>
+      </main>
+    );
+  }
+
+
+  if (!session?.user) {
+    return null;
+  }
+
   const markets: MarketItem[] = product.markets || [];
 
-  // 1. Calculations across all markets
   const minPrices = markets.map((m) => m.min);
   const maxPrices = markets.map((m) => m.max);
 
   const lowestPrice = minPrices.length > 0 ? Math.min(...minPrices) : product.today;
   const highestPrice = maxPrices.length > 0 ? Math.max(...maxPrices) : product.today;
 
-  // Find markets offering lowest and highest prices
   const lowestMarket = markets.find((m) => m.min === lowestPrice)?.market || "সব বাজার";
   const highestMarket = markets.find((m) => m.max === highestPrice)?.market || "সব বাজার";
 
-  // Calculate average of today's price across markets
   const totalAvg =
     markets.length > 0
       ? markets.reduce((acc, m) => acc + (m.min + m.max) / 2, 0) / markets.length
       : product.today;
 
-  // Unit translation
   const unitMap: Record<string, string> = {
     kg: "কেজি",
     litre: "লিটার",
@@ -37,7 +67,6 @@ export default function ProductDetailsView({ product }: Props) {
   };
   const unitName = unitMap[product.unit] || product.unit;
 
-  // Price difference compared to yesterday
   const priceDiff = (product.today ?? 0) - (product.yesterday ?? product.today ?? 0);
   const absDiff = Math.abs(priceDiff);
   const diffText =
@@ -54,6 +83,8 @@ export default function ProductDetailsView({ product }: Props) {
 
   return (
     <main className="max-w-6xl mx-auto px-4 py-8 space-y-8">
+
+
       {/* 1. Breadcrumbs */}
       <nav className="flex items-center gap-2 text-xs text-gray-500 font-medium">
         <Link href="/" className="hover:text-emerald-700 transition">
@@ -70,7 +101,7 @@ export default function ProductDetailsView({ product }: Props) {
         <span className="text-gray-800 font-semibold">{product.nameBn}</span>
       </nav>
 
-      {/* 2. Top Header Card */}
+      {/* Top Header Card */}
       <div className="bg-white rounded-3xl p-6 md:p-8 border border-gray-100 shadow-[0_2px_12px_rgba(0,0,0,0.02)] flex flex-col md:flex-row md:items-center justify-between gap-6">
         <div className="flex items-start gap-5">
           <div className="w-16 h-16 rounded-2xl bg-gray-50 border border-gray-100 flex items-center justify-center text-3xl shrink-0 shadow-inner">
@@ -87,7 +118,9 @@ export default function ProductDetailsView({ product }: Props) {
           </div>
         </div>
 
-        {/* Today's Price Box */}
+        {/* ajker daam*/}
+
+
         <div className="bg-[#f9faf9] border border-gray-100 rounded-2xl p-5 text-center min-w-[150px] self-start md:self-auto">
           <span className="text-[11px] text-gray-400 font-medium block">
             আজকের দাম
@@ -110,46 +143,46 @@ export default function ProductDetailsView({ product }: Props) {
         </div>
       </div>
 
-      {/* 3. দামের সারসংক্ষেপ (Summary 3-col Grid) */}
+      {/* daam er detail */}
       <section className="space-y-3">
         <h2 className="text-base font-bold text-gray-900 tracking-tight">
           দামের সারসংক্ষেপ
         </h2>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          {/* সর্বনিম্ন দাম */}
           <div className="bg-white rounded-2xl p-5 border border-gray-100 shadow-[0_2px_8px_rgba(0,0,0,0.02)]">
             <span className="text-xs text-gray-400 font-medium block">
               সর্বনিম্ন দাম
             </span>
             <div className="text-xl font-black text-emerald-600 my-1">
-              {toBengaliNumber(lowestPrice)} <span className="text-sm font-normal text-gray-600">টাকা</span>
+              {toBengaliNumber(lowestPrice)}{" "}
+              <span className="text-sm font-normal text-gray-600">টাকা</span>
             </div>
             <p className="text-xs text-gray-400">
               সবচেয়ে কম {lowestMarket}
             </p>
           </div>
 
-          {/* সর্বাধিক দাম */}
           <div className="bg-white rounded-2xl p-5 border border-gray-100 shadow-[0_2px_8px_rgba(0,0,0,0.02)]">
             <span className="text-xs text-gray-400 font-medium block">
               সর্বাধিক দাম
             </span>
             <div className="text-xl font-black text-rose-500 my-1">
-              {toBengaliNumber(highestPrice)} <span className="text-sm font-normal text-gray-600">টাকা</span>
+              {toBengaliNumber(highestPrice)}{" "}
+              <span className="text-sm font-normal text-gray-600">টাকা</span>
             </div>
             <p className="text-xs text-gray-400">
               সবচেয়ে বেশি {highestMarket}
             </p>
           </div>
 
-          {/* গড় দাম */}
           <div className="bg-white rounded-2xl p-5 border border-gray-100 shadow-[0_2px_8px_rgba(0,0,0,0.02)]">
             <span className="text-xs text-gray-400 font-medium block">
               গড় দাম
             </span>
             <div className="text-xl font-black text-emerald-700 my-1">
-              {toBengaliNumber(totalAvg.toFixed(0))} <span className="text-sm font-normal text-gray-600">টাকা</span>
+              {toBengaliNumber(totalAvg.toFixed(0))}{" "}
+              <span className="text-sm font-normal text-gray-600">টাকা</span>
             </div>
             <p className="text-xs text-gray-400">
               প্রতি {unitName}-এর হিসাবে
@@ -158,7 +191,7 @@ export default function ProductDetailsView({ product }: Props) {
         </div>
       </section>
 
-      {/* 4. বাজারভিত্তিক আজকের দাম (Table) */}
+      {/* bazar wise daam */}
       <section className="space-y-3">
         <h2 className="text-base font-bold text-gray-900 tracking-tight">
           বাজারভিত্তিক আজকের দাম

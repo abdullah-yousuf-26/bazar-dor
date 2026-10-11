@@ -8,6 +8,9 @@ export default function Hero() {
   const [banglaDate, setBanglaDate] = useState("মঙ্গলবার, ৬ অক্টোবর, ২০২৬");
 
   useEffect(() => {
+
+    // working dont touch
+
     setBanglaDate(getBengaliDate(new Date()));
   }, []);
 
@@ -22,7 +25,9 @@ export default function Hero() {
   return (
     <section className="max-w-6xl mx-auto px-4 pt-6 pb-4">
       <div className="bg-[#f2f7f3] border border-[#e2ece4] rounded-3xl p-6 sm:p-10 flex flex-col md:flex-row items-center justify-between gap-8 shadow-sm">
-        {/* Left Column: Text & CTA */}
+        
+        
+{/* Left side */}
         <div className="flex-1 max-w-xl space-y-4">
           <div className="inline-block bg-emerald-100 text-emerald-800 text-xs sm:text-sm font-medium px-3.5 py-1 rounded-full">
             {banglaDate}
@@ -48,7 +53,9 @@ export default function Hero() {
           </div>
         </div>
 
-        {/* Right Column: Hero Banner Image */}
+      {/* Hero Banner Image JPG */}
+
+
         <div className="w-full md:w-auto flex justify-center items-center">
           <div className="relative w-64 h-52 sm:w-80 sm:h-64">
             <Image

@@ -1,36 +1,72 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
-## Getting Started
+# 🛒 BazarDor — Market Price Tracker
 
-First, run the development server:
+**BazarDor** is a modern and responsive web application designed to monitor, compare, and analyze the prices of essential daily commodities. It aims to make up-to-date retail and wholesale market price information from different divisions of Bangladesh, including Dhaka, easily accessible to the general public.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+---
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 🛠️ Technologies Used
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- **Framework:** Next.js 16 (App Router)
+- **Language:** TypeScript
+- **Styling:** Tailwind CSS v4
+- **Authentication:** Better Auth (Email/Password, Google, GitHub)
+- **Database:** MongoDB Atlas
+- **Notifications:** React Hot Toast
+- **Icons:** Lucide React
+- **API:** Programming Hero BazarDor Open API
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+---
 
-## Learn More
+## 🌟 Key Features
 
-To learn more about Next.js, take a look at the following resources:
+### 1. 📈 Daily Market Prices & Live Price Ticker
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- Automatically displays the current Bengali date.
+- Features a scrolling market ticker showing the latest product prices and percentage changes.
+- Uses ▲ to indicate price increases and ▼ to indicate price decreases.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### 2. 🔍 Category Filtering & Numeric Sorting
 
-## Deploy on Vercel
+- Allows users to filter products across eight categories:
+  - Rice
+  - Lentils
+  - Oil
+  - Vegetables
+  - Fish
+  - Meat
+  - Eggs & Dairy
+  - Spices
+- Supports accurate numeric sorting with the following options:
+  - Default
+  - Price: Low to High
+  - Price: High to Low
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### 3. 📊 Division-Wise & Market-Wise Price Comparison
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- Displays the minimum, maximum, and average prices on each product details page.
+- Provides a comparative table of market prices across different divisions.
+- Helps users identify the markets offering the lowest and highest prices.
+
+### 4. 🔐 Secure Authentication & Protected Routes
+
+- Supports email and password authentication.
+- Provides social login through Google and GitHub.
+- Redirects unauthenticated users to the sign-in page when they attempt to access protected product details.
+- Displays notifications to inform users about authentication requirements.
+
+### 5. 👤 Profile Management & User Information Updates
+
+- Provides a personalized profile dashboard.
+- Displays the user's name, email address, and account creation date.
+- Allows users to update their names through Better Auth.
+
+---
+
+
+## 🎯 Project Goals
+
+BazarDor aims to make daily commodity prices more accessible and transparent across Bangladesh. By providing market comparisons and price statistics, the application helps consumers make informed purchasing decisions.
+
+---
+

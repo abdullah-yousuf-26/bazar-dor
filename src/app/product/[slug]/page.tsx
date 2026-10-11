@@ -34,7 +34,6 @@ async function ProductContent({ params }: { params: Promise<{ slug: string }> })
   const { slug } = await params;
   const allProducts = await getAllProducts();
 
-  // Find product by slug or ID
   const product = allProducts.find(
     (p) => p.slug === slug || String(p.id) === slug
   );
