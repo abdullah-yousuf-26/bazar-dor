@@ -29,7 +29,7 @@ export default function SignInPage() {
     setLoading(true);
     try {
       const res = await signIn.email({
-        email,
+        email: email.trim(),
         password,
       });
 
@@ -37,6 +37,7 @@ export default function SignInPage() {
         toast.error(res.error.message || "ভুল ইমেইল বা পাসওয়ার্ড");
       } else {
         toast.success("সাইন ইন সফল হয়েছে!");
+        // Strictly navigates to Home page
         router.push("/");
         router.refresh();
       }
@@ -64,7 +65,7 @@ export default function SignInPage() {
         <Navbar />
 
         <main className="max-w-md mx-auto px-4 pt-10 pb-16 flex flex-col items-center">
-          {/* Header Title */}
+          {/* Title */}
           <div className="text-center mb-8">
             <h1 className="text-2xl font-black text-gray-900 tracking-tight">
               সাইন ইন
@@ -74,10 +75,8 @@ export default function SignInPage() {
             </p>
           </div>
 
-          {/* Form Card */}
           <div className="w-full bg-white rounded-3xl p-7 border border-gray-100 shadow-[0_4px_20px_rgba(0,0,0,0.03)]">
             <form onSubmit={handleSubmit} className="space-y-4">
-              {/* Email */}
               <div>
                 <label className="block text-xs font-semibold text-gray-700 mb-1.5">
                   ইমেইল
@@ -92,14 +91,13 @@ export default function SignInPage() {
                 />
               </div>
 
-              {/* Password */}
               <div>
                 <label className="block text-xs font-semibold text-gray-700 mb-1.5">
                   পাসওয়ার্ড
                 </label>
                 <input
                   type="password"
-                  placeholder="কমপক্ষে ৮ অক্ষর"
+                  placeholder="কমপক্ষে ৬ অক্ষর"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-sm focus:outline-none focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600 transition placeholder:text-gray-400 bg-[#fbfdfb]"
@@ -107,7 +105,6 @@ export default function SignInPage() {
                 />
               </div>
 
-              {/* Submit Button */}
               <button
                 type="submit"
                 disabled={loading}
@@ -117,7 +114,6 @@ export default function SignInPage() {
               </button>
             </form>
 
-            {/* Divider */}
             <div className="relative my-6 text-center">
               <div className="absolute inset-0 flex items-center">
                 <div className="w-full border-t border-gray-100" />
@@ -127,7 +123,6 @@ export default function SignInPage() {
               </span>
             </div>
 
-            {/* Social Logins */}
             <div className="grid grid-cols-2 gap-2.5">
               <button
                 type="button"
@@ -147,7 +142,6 @@ export default function SignInPage() {
               </button>
             </div>
 
-            {/* Switch to Sign Up */}
             <p className="text-center text-xs text-gray-500 mt-6">
               অ্যাকাউন্ট নেই?{" "}
               <Link
@@ -159,7 +153,6 @@ export default function SignInPage() {
             </p>
           </div>
 
-          {/* Back Link */}
           <Link
             href="/"
             className="text-xs text-gray-500 hover:text-gray-800 transition mt-6 flex items-center gap-1"

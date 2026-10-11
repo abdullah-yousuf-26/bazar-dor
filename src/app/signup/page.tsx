@@ -13,7 +13,6 @@ export default function SignUpPage() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -27,31 +26,27 @@ export default function SignUpPage() {
       toast.error("ইমেইল প্রদান করুন");
       return;
     }
-    if (password.length < 8) {
-      toast.error("পাসওয়ার্ড কমপক্ষে ৮ অক্ষরের হতে হবে");
-      return;
-    }
-    if (password !== confirmPassword) {
-      toast.error("পাসওয়ার্ড দুটি মেলেনি");
+    if (password.length < 6) {
+      toast.error("পাসওয়ার্ড কমপক্ষে ৬ অক্ষরের হতে হবে");
       return;
     }
 
     setLoading(true);
     try {
       const res = await signUp.email({
-        name,
-        email,
+        name: name.trim(),
+        email: email.trim(),
         password,
       });
 
       if (res.error) {
-        toast.error(res.error.message || "অ্যাকাউন্ট তৈরি করা যায়নি");
+        toast.error(res.error.message || "রেজিস্ট্রেশন ব্যর্থ হয়েছে");
       } else {
-        toast.success("অ্যাকাউন্ট সফলভাবে তৈরি হয়েছে!");
-        router.push("/");
-        router.refresh();
+        toast.success("অ্যাকাউন্ট তৈরি হয়েছে! সাইন ইন করুন");
+        // Navigates strictly to Login page as per instruction
+        router.push("/signin");
       }
-    } catch (err: unknown) {
+    } catch {
       toast.error("কিছু ভুল হয়েছে, আবার চেষ্টা করুন");
     } finally {
       setLoading(false);
@@ -75,7 +70,7 @@ export default function SignUpPage() {
         <Navbar />
 
         <main className="max-w-md mx-auto px-4 pt-10 pb-16 flex flex-col items-center">
-          {/* Header Title */}
+          {/* Title */}
           <div className="text-center mb-8">
             <h1 className="text-2xl font-black text-gray-900 tracking-tight">
               অ্যাকাউন্ট তৈরি করুন
@@ -85,7 +80,6 @@ export default function SignUpPage() {
             </p>
           </div>
 
-          {/* Form Card */}
           <div className="w-full bg-white rounded-3xl p-7 border border-gray-100 shadow-[0_4px_20px_rgba(0,0,0,0.03)]">
             <form onSubmit={handleSubmit} className="space-y-4">
               {/* Name */}
@@ -125,7 +119,7 @@ export default function SignUpPage() {
                 </label>
                 <input
                   type="password"
-                  placeholder="কমপক্ষে ৮ অক্ষর"
+                  placeholder="কমপক্ষে ৬ অক্ষর"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-sm focus:outline-none focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600 transition placeholder:text-gray-400 bg-[#fbfdfb]"
@@ -133,22 +127,7 @@ export default function SignUpPage() {
                 />
               </div>
 
-              {/* Confirm Password */}
-              <div>
-                <label className="block text-xs font-semibold text-gray-700 mb-1.5">
-                  পাসওয়ার্ড নিশ্চিত করুন
-                </label>
-                <input
-                  type="password"
-                  placeholder="আবার লিখুন"
-                  value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-sm focus:outline-none focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600 transition placeholder:text-gray-400 bg-[#fbfdfb]"
-                  required
-                />
-              </div>
-
-              {/* Submit Button */}
+              {/* Register Button */}
               <button
                 type="submit"
                 disabled={loading}
@@ -168,7 +147,7 @@ export default function SignUpPage() {
               </span>
             </div>
 
-            {/* Social Logins */}
+            {/* Social Login Buttons (Google + GitHub) */}
             <div className="grid grid-cols-2 gap-2.5">
               <button
                 type="button"
@@ -188,7 +167,7 @@ export default function SignUpPage() {
               </button>
             </div>
 
-            {/* Switch to Sign In */}
+            {/* Link to Login */}
             <p className="text-center text-xs text-gray-500 mt-6">
               অ্যাকাউন্ট আছে?{" "}
               <Link
@@ -200,7 +179,6 @@ export default function SignUpPage() {
             </p>
           </div>
 
-          {/* Back Link */}
           <Link
             href="/"
             className="text-xs text-gray-500 hover:text-gray-800 transition mt-6 flex items-center gap-1"
