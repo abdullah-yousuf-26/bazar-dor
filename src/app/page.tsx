@@ -1,24 +1,50 @@
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
+import ProductSections from "@/components/ProductSections";
+import Footer from "@/components/Footer";
+import { Product } from "@/components/ProductCard";
 
-const demoTicker = [
-  { name: "স্বর্ণমাছি চাল", price: 64, unit: "কেজি", change: 2.1, emoji: "🍚" },
-  { name: "মিনিকেট চাল", price: 99, unit: "কেজি", change: -2.9, emoji: "🍚" },
-  { name: "বাটাম সাইজ চাল", price: 66, unit: "কেজি", change: 3.5, emoji: "🍚" },
-  { name: "মসুর ডাল", price: 142, unit: "কেজি", change: 2.9, emoji: "🫘" },
-  { name: "ছোলা", price: 120, unit: "কেজি", change: -2.4, emoji: "🫘" },
-];
+async function getProducts(): Promise<Product[]> {
+  try {
+    const res = await fetch("https://openapi.programming-hero.com/api/bazardor/products", {
+      next: { revalidate: 60 },
+    });
+    if (!res.ok) throw new Error("Failed to fetch products");
+    const json = await res.json();
+    return Array.isArray(json) ? json : json?.data || json?.products || [];
+  } catch (error) {
+    console.error("API fetch failed:", error);
+    return [];
+  }
+}
 
-export default function Home() {
+export default async function Home() {
+  const products = await getProducts();
+
+  const unitMap: Record<string, string> = {
+    kg: "কেজি",
+    litre: "লিটার",
+    dozen: "ডজন",
+    piece: "পিস",
+  };
+
+  const tickerItems = products.map((p: Product) => ({
+    id: p.id,
+    name: p.nameBn,
+    price: p.today,
+    unit: unitMap[p.unit] || p.unit,
+    change: p.change?.pct ?? 0,
+    emoji: p.image || p.categoryIcon,
+  }));
+
   return (
-    <div className="min-h-screen bg-[#f8faf8]">
-      <Navbar tickerItems={demoTicker} />
-      <Hero />
-      
-      {/* Anchor Section target for CTA test */}
-      <div id="সব-পণ্য" className="max-w-6xl mx-auto px-4 py-16">
-        <h2 className="text-xl font-bold text-gray-900">সব পণ্য সেকশন</h2>
+    <div className="min-h-screen bg-[#f8faf8] text-gray-900 flex flex-col justify-between">
+      <div>
+        <Navbar tickerItems={tickerItems} />
+        <Hero />
+        <ProductSections products={products} />
       </div>
+      <Footer />
     </div>
   );
 }
